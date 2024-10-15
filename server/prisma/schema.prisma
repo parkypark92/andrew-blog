@@ -20,20 +20,24 @@ model post {
   uploadedAt DateTime  @default(now())
   comments   comment[]
   published  Boolean   @default(false)
+  author     user      @relation(fields: [authorId], references: [id])
+  authorId   String
 }
 
 model comment {
-  id       String   @id @default(uuid())
-  text     String
-  date     DateTime @default(now())
-  post     post     @relation(fields: [postId], references: [id])
-  postId   String
-  author   user     @relation(fields: [authorId], references: [id])
-  authorId String
+  id     String   @id @default(uuid())
+  text   String
+  date   DateTime @default(now())
+  post   post     @relation(fields: [postId], references: [id])
+  postId String
+  user   user     @relation(fields: [userId], references: [id])
+  userId String
 }
 
 model user {
   id       String    @id @default(uuid())
   username String
   comments comment[]
+  posts    post[]
+  isAuthor Boolean   @default(false)
 }
