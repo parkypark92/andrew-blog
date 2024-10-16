@@ -1,18 +1,6 @@
 import "./App.css";
-import axios from "axios";
+import Router from "./Router";
 
-function App() {
-  const ApiCall = () => {
-    axios.get("http://localhost:3000/").then((res) => {
-      console.log(res.data);
-    });
-  };
-
-  return (
-    <>
-      <button onClick={ApiCall}>Make Api call</button>
-    </>
-  );
+export default function App() {
+  return <Router />;
 }
-
-export default App;
