@@ -1,3 +1,6 @@
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
 module.exports.get_all_blogposts = (req, res, next) => {
   res.send("Implement: Retrieve all posts and comments");
 };
@@ -6,8 +9,14 @@ module.exports.get_blogpost = (req, res, next) => {
   res.send("Implement: Retrieve specified blogpost data");
 };
 
-module.exports.create_blogpost = (req, res, next) => {
-  res.send("Implement: Retrieve new blogpost form data and add to database");
+module.exports.create_blogpost = async (req, res, next) => {
+  await prisma.post.create({
+    data: {
+      title: req.body.title,
+      content: req.body.text,
+      authorId: req.body.userId,
+    },
+  });
 };
 
 module.exports.edit_blogpost = (req, res, next) => {

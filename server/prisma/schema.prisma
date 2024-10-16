@@ -39,5 +39,5 @@ model user {
   username String
   comments comment[]
   posts    post[]
-  isAuthor Boolean   @default(false)
+  isAuthor String    @default("false")
 }

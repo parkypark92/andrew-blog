@@ -9,10 +9,10 @@ router.get("/blogposts/:postId", controller.get_blogpost);
 router.put("/blogposts/:postId", controller.edit_blogpost);
 router.delete("/blogposts/:postId", controller.delete_blogpost);
 //comments
-router.post("/blogposts/:postId/comment", controller.create_comment);
-router.put("blogposts/:postId/comments/:commentId", controller.edit_comment);
+router.post("/blogposts/:postId/comments", controller.create_comment);
+router.put("/blogposts/:postId/comments/:commentId", controller.edit_comment);
 router.delete(
-  "/blogposts/:postId/comments/:comment",
+  "/blogposts/:postId/comments/:commentId",
   controller.delete_comment
 );
 
