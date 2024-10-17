@@ -1,8 +1,9 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-module.exports.get_all_blogposts = (req, res, next) => {
-  res.send("Implement: Retrieve all posts and comments");
+module.exports.get_all_blogposts = async (req, res, next) => {
+  const postsData = await prisma.post.findMany();
+  return res.json({ postsData });
 };
 
 module.exports.get_blogpost = (req, res, next) => {
