@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     async function getPostData() {
       const data = await axios.get("http://localhost:3000/blogposts");
-      setPostsData(data.data.postsData);
+      setPostsData(data.data.posts);
     }
     getPostData();
   }, []);
@@ -23,6 +23,7 @@ export default function Home() {
               <div key={post.id} className="post">
                 <h2>{post.title}</h2>
                 <p>{post.content}</p>
+                <Link to={`/blogposts/${post.id}`}>View Post</Link>
               </div>
             );
           })}
