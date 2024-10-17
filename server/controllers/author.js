@@ -2,12 +2,17 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 module.exports.get_all_blogposts = async (req, res, next) => {
-  const postsData = await prisma.post.findMany();
-  return res.json({ postsData });
+  const posts = await prisma.post.findMany();
+  return res.json({ posts });
 };
 
-module.exports.get_blogpost = (req, res, next) => {
-  res.send("Implement: Retrieve specified blogpost data");
+module.exports.get_blogpost = async (req, res, next) => {
+  const post = await prisma.post.findUnique({
+    where: {
+      id: req.params.postId,
+    },
+  });
+  return res.json({ post });
 };
 
 module.exports.create_blogpost = async (req, res, next) => {
