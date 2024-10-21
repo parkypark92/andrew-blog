@@ -25,8 +25,18 @@ module.exports.create_blogpost = async (req, res, next) => {
   });
 };
 
-module.exports.edit_blogpost = (req, res, next) => {
-  res.send("Implement: Update a specified blogpost in database");
+module.exports.edit_blogpost = async (req, res, next) => {
+  console.log(req.body);
+  await prisma.post.update({
+    where: {
+      id: req.params.postId,
+    },
+    data: {
+      title: req.body.formData.title,
+      content: req.body.formData.text,
+    },
+  });
+  res.end();
 };
 
 module.exports.delete_blogpost = (req, res, next) => {
