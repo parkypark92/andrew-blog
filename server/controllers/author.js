@@ -2,7 +2,11 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 module.exports.get_all_blogposts = async (req, res, next) => {
-  const posts = await prisma.post.findMany();
+  const posts = await prisma.post.findMany({
+    orderBy: {
+      uploadedAt: "desc",
+    },
+  });
   return res.json({ posts });
 };
 
@@ -18,15 +22,15 @@ module.exports.get_blogpost = async (req, res, next) => {
 module.exports.create_blogpost = async (req, res, next) => {
   await prisma.post.create({
     data: {
-      title: req.body.title,
-      content: req.body.text,
-      authorId: req.body.userId,
+      title: req.body.formData.title,
+      content: req.body.formData.text,
+      authorId: req.body.formData.userId,
     },
   });
+  res.end();
 };
 
 module.exports.edit_blogpost = async (req, res, next) => {
-  console.log(req.body);
   await prisma.post.update({
     where: {
       id: req.params.postId,
@@ -39,8 +43,13 @@ module.exports.edit_blogpost = async (req, res, next) => {
   res.end();
 };
 
-module.exports.delete_blogpost = (req, res, next) => {
-  res.send("Implement: Delete a specified blogpost from database");
+module.exports.delete_blogpost = async (req, res, next) => {
+  await prisma.post.delete({
+    where: {
+      id: req.params.postId,
+    },
+  });
+  res.end();
 };
 
 module.exports.create_comment = (req, res, next) => {
