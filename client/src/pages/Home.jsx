@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import Blogpost from "../components/Blogpost";
 import axios from "axios";
 
 export default function Home() {
@@ -8,8 +9,8 @@ export default function Home() {
 
   useEffect(() => {
     async function getPostData() {
-      const data = await axios.get("http://localhost:3000/blogposts");
-      setPostsData(data.data.posts);
+      const response = await axios.get("http://localhost:3000/blogposts");
+      setPostsData(response.data.posts);
     }
     getPostData();
   }, []);
@@ -21,8 +22,7 @@ export default function Home() {
           postsData.map((post) => {
             return (
               <div key={post.id} className="post">
-                <h2>{post.title}</h2>
-                <p>{post.content}</p>
+                <Blogpost data={post}></Blogpost>
                 <Link to={`/blogposts/${post.id}`}>View Post</Link>
               </div>
             );
