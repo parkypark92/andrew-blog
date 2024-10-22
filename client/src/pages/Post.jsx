@@ -2,13 +2,15 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCallback } from "react";
-import { Link } from "react-router-dom";
 import EditPost from "../components/EditPost";
+import DeletePost from "../components/DeletePost";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 export default function Post() {
   const [postData, setPostData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { postId } = useParams();
 
   const getPostData = useCallback(async () => {
@@ -22,12 +24,18 @@ export default function Post() {
 
   return (
     <>
-      {isEditing === true ? (
+      {isEditing ? (
         <EditPost
           data={postData}
           postId={postId}
           setIsEditing={setIsEditing}
           getPostData={getPostData}
+        />
+      ) : isDeleting ? (
+        <DeletePost
+          data={postData}
+          postId={postId}
+          setIsDeleting={setIsDeleting}
         />
       ) : (
         postData && (
@@ -37,9 +45,11 @@ export default function Post() {
             <button type="button" onClick={() => setIsEditing(true)}>
               Edit Post
             </button>
-
-            <Link to={`/blogposts/${postId}/delete`} state={{ data: postData }}>
-              <button>Delete Post</button>
+            <button type="button" onClick={() => setIsDeleting(true)}>
+              Delete Post
+            </button>
+            <Link to={"/"}>
+              <button>Home</button>
             </Link>
           </div>
         )
