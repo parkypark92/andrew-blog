@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCallback } from "react";
-import EditPost from "../components/EditPost";
-import DeletePost from "../components/DeletePost";
-import { Link } from "react-router-dom";
+import EditPost from "../components/EditPost/EditPost.jsx";
+import DeletePost from "../components/DeletePost/DeletePost.jsx";
+import BlogpostSingle from "../components/Blogposts/BlogpostSingle";
 import axios from "axios";
 
 export default function Post() {
@@ -39,19 +39,11 @@ export default function Post() {
         />
       ) : (
         postData && (
-          <div className="post-ctnr">
-            <h2>{postData.title}</h2>
-            <p>{postData.content}</p>
-            <button type="button" onClick={() => setIsEditing(true)}>
-              Edit Post
-            </button>
-            <button type="button" onClick={() => setIsDeleting(true)}>
-              Delete Post
-            </button>
-            <Link to={"/"}>
-              <button>Home</button>
-            </Link>
-          </div>
+          <BlogpostSingle
+            postData={postData}
+            setIsDeleting={setIsDeleting}
+            setIsEditing={setIsEditing}
+          />
         )
       )}
     </>

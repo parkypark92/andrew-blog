@@ -46,6 +46,9 @@ export default function EditPost({ data, postId, setIsEditing, getPostData }) {
         value={contentValue}
       ></textarea>
       <button onClick={updatePost}>Update</button>
+      <button type="button" onClick={() => setIsEditing(false)}>
+        Cancel
+      </button>
     </form>
   );
 }
