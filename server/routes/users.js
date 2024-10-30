@@ -6,6 +6,7 @@ const controller = require("../controllers/user");
 router.get("/", function (req, res, next) {
   res.send("respond with a resource");
 });
-router.post("/signup", controller.signup_user);
+router.post("/login", controller.login);
+router.post("/signup", controller.signup);
 
 module.exports = router;

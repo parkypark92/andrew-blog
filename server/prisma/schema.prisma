@@ -40,4 +40,13 @@ model user {
   comments comment[]
   posts    post[]
   isAuthor String    @default("false")
+  salt     String?
+  hash     String?
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
 }
