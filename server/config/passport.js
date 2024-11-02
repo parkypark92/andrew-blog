@@ -1,48 +1,40 @@
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+const path = require("path");
+const fs = require("fs");
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const validatePassword = require("../utils/passwordUtils").validatePassword;
 
-const verifyCallback = async (username, password, done) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        username: username,
-      },
-    });
-    if (!user) done(null, false, { message: "Incorrect username or password" });
-    const isValid = validatePassword(password, user.salt, user.hash);
-    if (isValid) {
-      //user is passed to serializeUser
-      return done(null, user, { message: "Success" });
-    } else {
-      return done(null, false, { message: "Incorrect username or password" });
-    }
-  } catch (err) {
-    done(err);
-  }
+const pathToKey = path.join(__dirname, "..", "id_rsa_pub.pem");
+const PUB_KEY = fs.readFileSync(pathToKey, "utf8");
+
+const options = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: PUB_KEY,
+  algorithms: ["RS256"],
 };
 
-const strategy = new LocalStrategy(verifyCallback);
+module.exports = (passport) => {
+  // The JWT payload is passed into the verify callback
+  passport.use(
+    new JwtStrategy(options, function (jwt_payload, done) {
+      console.log(jwt_payload);
 
-passport.use(strategy);
-
-passport.serializeUser((user, done) => {
-  //req.session.passport.user is set to user.id
-  done(null, user.id);
-});
-
-//if id is valid, sets req.user to the user object
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: id,
-      },
-    });
-    done(null, user);
-  } catch (err) {
-    done(err);
-  }
-});
+      // We will assign the `sub` property on the JWT to the database ID of user
+      User.findOne({ _id: jwt_payload.sub }, function (err, user) {
+        // This flow look familiar?  It is the same as when we implemented
+        // the `passport-local` strategy
+        if (err) {
+          return done(err, false);
+        }
+        if (user) {
+          return done(null, user);
+        } else {
+          return done(null, false);
+        }
+      });
+    })
+  );
+};

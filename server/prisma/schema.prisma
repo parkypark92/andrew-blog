@@ -36,7 +36,7 @@ model comment {
 
 model user {
   id       String    @id @default(uuid())
-  username String
+  username String    @unique
   comments comment[]
   posts    post[]
   isAuthor String    @default("false")
