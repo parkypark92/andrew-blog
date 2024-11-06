@@ -1,11 +1,9 @@
-const passport = require("passport");
 const path = require("path");
 const fs = require("fs");
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const validatePassword = require("../utils/passwordUtils").validatePassword;
 
 const pathToKey = path.join(__dirname, "..", "id_rsa_pub.pem");
 const PUB_KEY = fs.readFileSync(pathToKey, "utf8");
@@ -16,25 +14,22 @@ const options = {
   algorithms: ["RS256"],
 };
 
-module.exports = (passport) => {
-  // The JWT payload is passed into the verify callback
+module.exports = async (passport) => {
   passport.use(
-    new JwtStrategy(options, function (jwt_payload, done) {
+    new JwtStrategy(options, async (jwt_payload, done) => {
       console.log(jwt_payload);
-
-      // We will assign the `sub` property on the JWT to the database ID of user
-      User.findOne({ _id: jwt_payload.sub }, function (err, user) {
-        // This flow look familiar?  It is the same as when we implemented
-        // the `passport-local` strategy
-        if (err) {
-          return done(err, false);
-        }
+      try {
+        const user = await prisma.user.findUnique({
+          where: {
+            id: jwt_payload.sub,
+          },
+        });
         if (user) {
           return done(null, user);
-        } else {
-          return done(null, false);
-        }
-      });
+        } else return done(null, false);
+      } catch (err) {
+        return done(err, false);
+      }
     })
   );
 };

@@ -6,22 +6,20 @@ const pathToKey = path.join(__dirname, "..", "id_rsa_priv.pem");
 const PRIV_KEY = fs.readFileSync(pathToKey, "utf8");
 
 module.exports.issueJWT = (user) => {
-  const _id = user._id;
-
-  const expiresIn = "1d";
+  const userId = user.id;
 
   const payload = {
-    sub: _id,
+    sub: userId,
     iat: Date.now(),
   };
 
   const signedToken = jsonwebtoken.sign(payload, PRIV_KEY, {
-    expiresIn: expiresIn,
+    expiresIn: "1d",
     algorithm: "RS256",
   });
 
   return {
     token: "Bearer " + signedToken,
-    expires: expiresIn,
+    expires: "1d",
   };
 };
