@@ -4,8 +4,7 @@ const controller = require("../controllers/user");
 
 /* GET users listing. */
 router.get("/protected", controller.auth, function (req, res, next) {
-  console.log(req.user);
-  res.send("authenticated!");
+  res.json(req.user);
 });
 router.post("/login", controller.login);
 router.post("/signup", controller.signup);
