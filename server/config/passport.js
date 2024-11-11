@@ -17,6 +17,7 @@ const options = {
 module.exports = async (passport) => {
   passport.use(
     new JwtStrategy(options, async (jwt_payload, done) => {
+      console.log("strategy");
       console.log(jwt_payload);
       try {
         const user = await prisma.user.findUnique({

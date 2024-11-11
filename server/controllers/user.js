@@ -75,7 +75,7 @@ module.exports.auth = (req, res, next) => {
       responseObj.data = info.message;
       responseObj.statusCode = 401;
       responseObj.errorMsg = "user is not authenticated!!!!";
-      return res.status(responseObj.statusCode).json(responseObj);
+      return res.json(responseObj);
     }
     req.user = user;
     next();
